@@ -9,6 +9,7 @@ export default defineConfig({
   title: 'SSPL Billing',
   description: 'Fast wholesale billing and ERP front-end built on Frappe / ERPNext',
   cleanUrls: true,
+  srcExclude: ['README.md'],
   lastUpdated: true,
   head: [['link', { rel: 'icon', type: 'image/png', href: `${base}favicon.png` }]],
 
