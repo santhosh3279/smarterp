@@ -27,6 +27,18 @@ npm run preview   # serve the built site on :5176
 Serving under a sub-path (e.g. `https://erp.example.com/site/`): build with
 `SITE_BASE=/site/ npm run build` (or start dev with the same variable).
 
+## Deploy (build here, pull on the server)
+
+```bash
+./deploy.sh        # builds, commits .vitepress/dist/ to the `deploy` branch, pushes
+```
+
+On the nginx server (one time), then `git pull` after every deploy:
+
+```bash
+git clone -b deploy --single-branch https://github.com/santhosh3279/smarterp.git /var/www/smarterp
+```
+
 ## nginx
 
 ### Dev mode (proxy to the VitePress dev server)
@@ -48,15 +60,17 @@ server {
 }
 ```
 
-### Production (static files, no Node process)
+### Production (static files from the deploy branch, no Node on the server)
 
 ```nginx
 server {
     listen 80;
     server_name billing.example.com;
 
-    root /home/erpdev/smart_erp/.vitepress/dist;
+    root /var/www/smarterp;
     index index.html;
+
+    location ~ /\.git { deny all; }   # clone's .git sits in the web root
 
     location / {
         try_files $uri $uri.html $uri/ =404;
